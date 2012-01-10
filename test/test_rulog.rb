@@ -314,10 +314,10 @@ class TestRulog < Test::Unit::TestCase
     rs1.trace if ENV['RULOG_TRACE']
 
     # without the cut, these will return two answers for each
-#    print "!!! " + rs1.solve_multi(Rulog::declare{ color(:a, v(:col)) }).to_s
-
     assert rs1.solve_multi(Rulog::declare{ color(:a, v(:col)) }).size == 1
     assert rs1.solve_multi(Rulog::declare{ color(:b, v(:col)) }).size == 1
+
+    assert rs1.solve(Rulog::declare{ color(:a, :red) }) #.size == 1
 
     # this should always return just 'unknown'
     assert rs1.solve_multi(Rulog::declare{ color(:c, v(:col)) }).size == 1

@@ -272,7 +272,7 @@ module Rulog
     def solve_multi goal
       answers = []
       amb = Ambit::Generator.new
-      puts "\ngoal:\n  #{goal}\nanswers:\n" if @trace > 0
+      puts "\ngoal:\n  #{goal}\nanswer(s):\n" if @trace > 0
 
       answer = _solve amb, goal, [goal]
       if answer
@@ -296,21 +296,26 @@ module Rulog
           n_resolvent = resolvent
           n_x = x
         else
-          # XXX XXX XXX this should be right, but we're hitting it too many times
-          # XXX XXX XXX the idea is that cut should commit to the current choice of rule, not
-          # XXX XXX XXX further.  with this mark commented out, cut! commits to all current
-          # XXX XXX XXX choices
+          # XXX XXX XXX cut should commit to the current choice of rule, not further.
+          # XXX XXX XXX with this amb.mark commented out, cut! commits to all current
+          # XXX XXX XXX choices, which is wrong.  but with this amb.mark commented in,
+          # XXX XXX XXX cut does not commit far enough, which is worse
 
-          # XXX XXX XXX and this happens because when we have a rule of the form
-          # XXX XXX XXX f(X) :- g(X), !.
+          # XXX XXX XXX the problem is that when we have a rule of the form
+          # XXX XXX XXX   f(X) :- g(X), !.
           # XXX XXX XXX we make another choice or choices while proving g(X), and these
-          # XXX XXX XXX get marked.  named marks might fix this, but what else would?
-          #puts "marking!" if @trace > 1
-          #amb.mark
+          # XXX XXX XXX get marked.
+          #
+          # XXX XXX XXX so we need a way to cut `to the right place' (read: back to just 
+          # XXX XXX XXX before the choice of the current rule)
+          #
+          # puts "marking!" if @trace > 1
+          # amb.mark
 
           puts "choosing!" if @trace > 1
           rule = amb.choose(@p)
           puts "chose " + rule.to_s if @trace > 1
+
           amb.assert(e = Rulog::unify(a, rule.head))
           n_resolvent = e.rename(e.instantiate(rule.conditions + resolvent))
           n_x = e.instantiate(x)

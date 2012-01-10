@@ -8,6 +8,8 @@ require 'hoe'
 # Hoe.plugin :inline
 # Hoe.plugin :racc
 # Hoe.plugin :rubyforge
+Hoe.plugin :flay
+Hoe.plugin :flog
 
 Hoe.spec 'rulog' do
   developer('jwise', 'jwise@draga.com')
