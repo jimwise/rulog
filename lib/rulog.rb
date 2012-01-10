@@ -135,6 +135,10 @@ module Rulog
     end
   end
 
+  class Cut
+    include Singleton
+  end
+
   class Wildcard < Var
     include Singleton
 
@@ -261,11 +265,19 @@ module Rulog
 
     def _solve amb, x, resolvent = [x]
       if not resolvent.empty?
-        a = resolvent.pop
-        rule = amb.choose(@p)
-        amb.assert(e = Rulog::unify(a, rule.head))
-        n_resolvent = e.rename(e.instantiate(resolvent + rule.conditions))
-        n_x = e.instantiate(x)
+        a = resolvent.shift
+        case a
+        when Cut
+          amb.cut!
+          n_resolvent = resolvent
+          n_x = x
+        else
+          amb.mark
+          rule = amb.choose(@p)
+          amb.assert(e = Rulog::unify(a, rule.head))
+          n_resolvent = e.rename(e.instantiate(rule.conditions + resolvent))
+          n_x = e.instantiate(x)
+        end
         _solve amb, n_x, n_resolvent
       else
         x
@@ -292,6 +304,10 @@ module Rulog
     def v sym
       @vars[sym] ||= Rulog::Var.new(sym)
       @vars[sym]
+    end
+
+    def cut!
+      Rulog::Cut.instance
     end
 
     def method_missing sym, *args

@@ -281,4 +281,39 @@ class TestRulog < Test::Unit::TestCase
     #assert rs1.solve(Rulog::declare{ hanoi(s(s(0)), :a, :b, :c, v(:moves))   })
     #assert rs1.solve(Rulog::declare{ hanoi(s(s(s(0))), :a, :b, :c, v(:moves))   })
   end
+
+  def test_cut
+
+    # from prolog cut example at
+    # http://www.csupomona.edu/~jrfisher/www/prolog_tutorial/3_2.html
+    # -- goal is to make 'unknown' a valid color only for parts not known as red or black
+    # (without cuts, each red or black part could be used as its own color _or_ unknown
+    # in a solution)
+    #
+    #	part(a). part(b). part(c).
+    #	red(a). black(b).
+    #	color(P,red) :- red(P),!.
+    #	color(P,black) :- black(P),!.
+    #	color(P,unknown). 
+
+    rs1 = Rulog::rules(
+                       # Rulog::declare { part(:a) },
+                       # Rulog::declare { part(:b) },
+                       # Rulog::declare { part(:c) },
+                       Rulog::declare { red(:a) },
+                       Rulog::declare { black(:b) },
+                       Rulog::declare { color(v(:p), :red) [ red(v(:p)), cut! ] },
+                       Rulog::declare { color(v(:p), :black) [ black(v(:p)), cut! ] },
+                       Rulog::declare { color(v(:p), :unknown) } )
+
+    rs1.trace if ENV['RULOG_TRACE']
+
+    assert rs1.solve(Rulog::declare{ color(:a, v(:col)) })
+    assert rs1.solve(Rulog::declare{ color(:b, v(:col)) })
+    assert rs1.solve(Rulog::declare{ color(:c, v(:col)) })
+
+    # without cut, these would succeed after backtracking
+#    assert !rs1.solve(Rulog::declare{ color(:a, :unknown) })
+#    assert !rs1.solve(Rulog::declare{ color(:b, :unknown) })
+  end
 end
