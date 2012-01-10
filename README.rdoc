@@ -8,7 +8,7 @@ License::   2-clause BSD-Style (see LICENSE.txt)
 
 == DESCRIPTION:
 
-Rulog is Ruby Logic, a Logic Programming system for Ruby.
+Rulog is Ruby with Logic, a Logic Programming system for Ruby.
 
 Rulog follows Prolog conventions where possible to do so within a Ruby DSL,
 but makes a strong effort to retain a Rubyish "feel" wherever possible.  The
