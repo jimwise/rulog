@@ -300,6 +300,8 @@ class TestRulog < Test::Unit::TestCase
     #	color(P,red) :- red(P),!.
     #	color(P,black) :- black(P),!.
     #	color(P,unknown). 
+    #
+    # this is a 'red' cut (pun stated as intended in the source material)
 
     rs1 = Rulog::rules(
                        Rulog::declare { red(:a) },
@@ -311,6 +313,8 @@ class TestRulog < Test::Unit::TestCase
     rs1.trace if ENV['RULOG_TRACE']
 
     # without the cut, these will return two answers for each
+#    print "!!! " + rs1.solve_multi(Rulog::declare{ color(:a, v(:col)) }).to_s
+
     assert rs1.solve_multi(Rulog::declare{ color(:a, v(:col)) }).size == 1
     assert rs1.solve_multi(Rulog::declare{ color(:b, v(:col)) }).size == 1
 

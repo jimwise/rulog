@@ -137,6 +137,10 @@ module Rulog
 
   class Cut
     include Singleton
+    
+    def to_s
+      "cut!"
+    end
   end
 
   class Wildcard < Var
@@ -282,12 +286,26 @@ module Rulog
         a = resolvent.shift
         case a
         when Cut
+          puts "cutting!" if @trace > 0
           amb.cut!
           n_resolvent = resolvent
           n_x = x
         else
+          # XXX XXX XXX this should be right, but we're hitting it too many times
+          # XXX XXX XXX the idea is that cut should commit to the current choice of rule, not
+          # XXX XXX XXX further.  with this mark commented out, cut! commits to all current
+          # XXX XXX XXX choices
+
+          # XXX XXX XXX and this happens because when we have a rule of the form
+          # XXX XXX XXX f(X) :- g(X), !.
+          # XXX XXX XXX we make another choice or choices while proving g(X), and these
+          # XXX XXX XXX get marked.  named marks would fix this, but what else would?
+          puts "marking!" if @trace > 0
           amb.mark
+
+          puts "choosing!" if @trace > 0
           rule = amb.choose(@p)
+          puts "chose " + rule.to_s if @trace > 0
           amb.assert(e = Rulog::unify(a, rule.head))
           n_resolvent = e.rename(e.instantiate(rule.conditions + resolvent))
           n_x = e.instantiate(x)
