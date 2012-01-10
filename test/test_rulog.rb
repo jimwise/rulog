@@ -84,7 +84,6 @@ class TestRulog < Test::Unit::TestCase
   end
 
   def test_solve_simple
-
     rs1 = Rulog::RuleSet.new
     rs1.trace if ENV['RULOG_TRACE']
     f1 = Rulog::Functor.new :man, :adam
@@ -102,7 +101,6 @@ class TestRulog < Test::Unit::TestCase
     assert rs1.solve q2
     assert !rs1.solve(q3)
     assert !rs1.solve(q4)
-
   end
 
   def test_solve_more
@@ -162,6 +160,14 @@ class TestRulog < Test::Unit::TestCase
     # puts Rulog::declare { clone }.class
     # puts Rulog::declare { man }.class
     # assert Rulog::declare { initialize } == Rulog::Functor.new(:initialize)
+  end
+
+  def test_solve_multi
+    rs1 = Rulog::rules(Rulog::declare{  role(:joe, :employee)  },
+                       Rulog::declare{  role(:joe, :parent)  },
+                       Rulog::declare{  role(:bob, :employee)  })
+    assert rs1.solve_multi(Rulog::declare{  role(:joe, v(:role))  }).size == 2
+    assert rs1.solve_multi(Rulog::declare{  role(:bob, v(:role))  }).size == 1
   end
 
   def test_classic_list
@@ -296,9 +302,6 @@ class TestRulog < Test::Unit::TestCase
     #	color(P,unknown). 
 
     rs1 = Rulog::rules(
-                       # Rulog::declare { part(:a) },
-                       # Rulog::declare { part(:b) },
-                       # Rulog::declare { part(:c) },
                        Rulog::declare { red(:a) },
                        Rulog::declare { black(:b) },
                        Rulog::declare { color(v(:p), :red) [ red(v(:p)), cut! ] },
