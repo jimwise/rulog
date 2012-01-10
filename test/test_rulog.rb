@@ -179,7 +179,6 @@ class TestRulog < Test::Unit::TestCase
                        )
 
     rs1.trace if ENV['RULOG_TRACE']
-    Rulog::Env::trace if ENV['RULOG_TRACE']
 
     assert rs1.solve(Rulog::declare{    list(:nil)             })
     assert rs1.solve(Rulog::declare{    list(cons(1, :nil))    })
@@ -308,12 +307,11 @@ class TestRulog < Test::Unit::TestCase
 
     rs1.trace if ENV['RULOG_TRACE']
 
-    assert rs1.solve(Rulog::declare{ color(:a, v(:col)) })
-    assert rs1.solve(Rulog::declare{ color(:b, v(:col)) })
-    assert rs1.solve(Rulog::declare{ color(:c, v(:col)) })
+    # without the cut, these will return two answers for each
+    assert rs1.solve_multi(Rulog::declare{ color(:a, v(:col)) }).size == 1
+    assert rs1.solve_multi(Rulog::declare{ color(:b, v(:col)) }).size == 1
 
-    # without cut, these would succeed after backtracking
-#    assert !rs1.solve(Rulog::declare{ color(:a, :unknown) })
-#    assert !rs1.solve(Rulog::declare{ color(:b, :unknown) })
+    # this should always return just 'unknown'
+    assert rs1.solve_multi(Rulog::declare{ color(:c, v(:col)) }).size == 1
   end
 end

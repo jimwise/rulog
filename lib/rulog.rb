@@ -7,18 +7,18 @@ module Rulog
   # Unification
 
   class Env
-    @@trace = false
+    @@trace = 0
 
     def initialize prev = {}
       @theta = prev.clone
     end
 
-    def self.trace
-      @@trace = true
+    def self.trace t=1
+      @@trace = @@trace + t
     end
 
-    def self.untrace
-      @@trace = false
+    def self.untrace t=1
+      @@trace = @@trace - t
     end
 
     def fresh? x
@@ -42,7 +42,7 @@ module Rulog
     # this is a functional interface -- a new env is returned with the MGU, as taken
     # against the bindings already in this env
     def unify a, b
-      puts "unifying #{a.to_s} and #{b.to_s}" if @@trace
+      puts "unifying #{a.to_s} and #{b.to_s}" if @@trace > 0
 
       # if either is already bound, substitute up front
       a = instantiate a
@@ -236,15 +236,15 @@ module Rulog
           r[]
         end
       end
-      @trace = false
+      @trace = 0
     end
     
-    def trace
-      @trace = true
+    def trace t=1
+      @trace = @trace + t
     end
 
-    def untrace
-      @trace = false
+    def untrace t=1
+      @trace = @trace - t
     end
 
     # takes a Rule
@@ -259,9 +259,24 @@ module Rulog
 
     def solve goal
       answer = _solve Ambit::Generator.new, goal, [goal]
-      puts "\ngoal:\n  #{goal}\nanswer:\n  #{answer or "no."}\n" if @trace
+      puts "\ngoal:\n  #{goal}\nanswer:\n  #{answer or "no."}\n" if @trace > 0
       answer
     end
+
+    def solve_multi goal
+      answers = []
+      amb = Ambit::Generator.new
+      answer = _solve amb, goal, [goal]
+      if answer
+        puts "\ngoal:\n  #{goal}\nanswer:\n  #{answer or "no."}\n" if @trace > 0
+        answers << answer
+        amb.fail!
+      end
+      answers
+    rescue Ambit::ChoicesExhausted
+      return answers
+    end
+
 
     def _solve amb, x, resolvent = [x]
       if not resolvent.empty?
