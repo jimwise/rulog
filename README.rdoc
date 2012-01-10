@@ -1,6 +1,6 @@
 = rulog
 
-https://github.com/jimwise/ruby/tree/master/rulog
+https://github.com/jimwise/rulog
 
 Author::    Jim Wise  (mailto:jwise@draga.com)
 Copyright:: Copyright (c) 2011 Jim Wise
