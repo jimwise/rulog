@@ -267,15 +267,20 @@ module Rulog
       answer
     end
 
+    # XXX XXX should take a max number of answers -- there are cases where we want
+    # XXX XXX N of infinite answers
     def solve_multi goal
       answers = []
       amb = Ambit::Generator.new
+      puts "\ngoal:\n  #{goal}\nanswers:\n" if @trace > 0
+
       answer = _solve amb, goal, [goal]
       if answer
-        puts "\ngoal:\n  #{goal}\nanswer:\n  #{answer or "no."}\n" if @trace > 0
+        puts "  #{answer}\n" if @trace > 0
         answers << answer
         amb.fail!
       end
+      puts "  no." if @trace > 0 and answers.size == 0
       answers
     rescue Ambit::ChoicesExhausted
       return answers
@@ -286,7 +291,7 @@ module Rulog
         a = resolvent.shift
         case a
         when Cut
-          puts "cutting!" if @trace > 0
+          puts "cutting!" if @trace > 1
           amb.cut!
           n_resolvent = resolvent
           n_x = x
@@ -299,13 +304,13 @@ module Rulog
           # XXX XXX XXX and this happens because when we have a rule of the form
           # XXX XXX XXX f(X) :- g(X), !.
           # XXX XXX XXX we make another choice or choices while proving g(X), and these
-          # XXX XXX XXX get marked.  named marks would fix this, but what else would?
-          puts "marking!" if @trace > 0
-          amb.mark
+          # XXX XXX XXX get marked.  named marks might fix this, but what else would?
+          #puts "marking!" if @trace > 1
+          #amb.mark
 
-          puts "choosing!" if @trace > 0
+          puts "choosing!" if @trace > 1
           rule = amb.choose(@p)
-          puts "chose " + rule.to_s if @trace > 0
+          puts "chose " + rule.to_s if @trace > 1
           amb.assert(e = Rulog::unify(a, rule.head))
           n_resolvent = e.rename(e.instantiate(rule.conditions + resolvent))
           n_x = e.instantiate(x)

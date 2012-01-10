@@ -166,6 +166,7 @@ class TestRulog < Test::Unit::TestCase
     rs1 = Rulog::rules(Rulog::declare{  role(:joe, :employee)  },
                        Rulog::declare{  role(:joe, :parent)  },
                        Rulog::declare{  role(:bob, :employee)  })
+    rs1.trace if ENV['RULOG_TRACE']
     assert rs1.solve_multi(Rulog::declare{  role(:joe, v(:role))  }).size == 2
     assert rs1.solve_multi(Rulog::declare{  role(:bob, v(:role))  }).size == 1
   end
