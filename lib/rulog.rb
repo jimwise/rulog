@@ -277,7 +277,6 @@ module Rulog
       return answers
     end
 
-
     def _solve amb, x, resolvent = [x]
       if not resolvent.empty?
         a = resolvent.shift
