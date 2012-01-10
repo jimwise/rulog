@@ -3,6 +3,7 @@ History.txt
 LICENSE.txt
 Manifest.txt
 README.txt
+README.rdoc
 Rakefile
 lib/rulog.rb
 test/test_rulog.rb
