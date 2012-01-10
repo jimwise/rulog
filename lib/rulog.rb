@@ -305,6 +305,9 @@ module Rulog
           n_x = x
         when ScopeMarker
           puts "finished rule" if @trace > 1
+          # ambit doesn't (yet!) give us a way to undo a mark operation
+          # also, what happens if a rule has multiple cuts?  we need a scoped 
+          # mark within ambit, perhaps?
           # amb.unmark!
           n_resolvent = resolvent
           n_x = x
