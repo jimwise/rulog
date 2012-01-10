@@ -76,6 +76,34 @@ and generate the RDoc.
 
 === How to Use This Gem
 
+To get started, include this gem using
+
+    require 'rubygems'
+    require 'rulog'
+
+This gem provides the Rulog module.  This module provides several methods
+which allow use of Logic Programming with Ruby.
+
+=== A DSL for Facts and Rules
+
+    man(:abraham)
+    man(:isaac)
+    man(:jacob)
+
+    woman(:sarah)
+    woman(:rebekah)
+    woman(:rachel)
+
+    parent(:abraham, :isaac)
+    parent(:sarah, :isaac)
+    parent(:isaac, :jacob)
+    parent(:rebekah, :jacob)
+
+    father(v(:x), v(:y)) [ parent(v(:x), v(:y)), man(:x) ]
+    son(v(:x), v(:y)) [ parent(v(:x), v(:y)), man(:y) ]
+
+=== Declaring Facts and Rules
+
 === Querying for a Solution
 
 === More Than One Answer
