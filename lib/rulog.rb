@@ -13,12 +13,16 @@ module Rulog
       @theta = prev.clone
     end
 
-    def self.trace t=1
-      @@trace = @@trace + t
+    def self.trace lvl
+      if lvl
+        @@trace = lvl
+      else
+        @@trace = @@trace + 1
+      end
     end
 
-    def self.untrace t=1
-      @@trace = @@trace - t
+    def self.untrace
+      @@trace = 0
     end
 
     def fresh? x
@@ -105,7 +109,7 @@ module Rulog
         s
       when Var
         block.call(s)
-      when Rulog::Functor # XXX XXX XXX messy -- this is the only place env knows of functor
+      when Rulog::Functor # XXX XXX messy -- this is the only place env knows of functor
         Rulog::Functor.new _traverse(s.f, &block), *_traverse(s.args, &block)
       when String
         # in ruby 1.8, strings are enumerable, but we want them to be ground
@@ -251,17 +255,21 @@ module Rulog
       @trace = 0
     end
     
-    def trace t=1
-      @trace = @trace + t
+    def trace lvl=false
+      if lvl
+        @trace = lvl
+      else
+        @trace = @trace + 1
+      end
     end
 
-    def untrace t=1
-      @trace = @trace - t
+    def untrace 
+      @trace = 0
     end
 
     # takes a Rule
     def declare r
-      raise unless r.kind_of? Rule  # XXX XXX XXX for now
+      raise unless r.kind_of? Rule  # XXX XXX alternately, we could coerce a functor to a fact
       @p << r
     end
 
@@ -280,6 +288,7 @@ module Rulog
     def solve_multi goal
       answers = []
       amb = Ambit::Generator.new
+      amb.trace if @trace > 2
       puts "\ngoal:\n  #{goal}\nanswer(s):\n" if @trace > 0
 
       answer = _solve amb, goal, [goal]
@@ -301,42 +310,30 @@ module Rulog
         when Cut
           puts "cutting!" if @trace > 1
           amb.cut!
+          # now put a new mark, so later cuts (and the unmark at the end of this scope) work
+          amb.mark
           n_resolvent = resolvent
           n_x = x
         when ScopeMarker
           puts "finished rule" if @trace > 1
-          # ambit doesn't (yet!) give us a way to undo a mark operation
-          # also, what happens if a rule has multiple cuts?  we need a scoped 
-          # mark within ambit, perhaps?
-          # amb.unmark!
+          amb.unmark!
           n_resolvent = resolvent
           n_x = x
         else
-          # XXX XXX XXX cut should commit to the current choice of rule, not further.
-          # XXX XXX XXX with this amb.mark commented out, cut! commits to all current
-          # XXX XXX XXX choices, which is wrong.  but with this amb.mark commented in,
-          # XXX XXX XXX cut does not commit far enough, which is worse
-
-          # XXX XXX XXX the problem is that when we have a rule of the form
-          # XXX XXX XXX   f(X) :- g(X), !.
-          # XXX XXX XXX we make another choice or choices while proving g(X), and these
-          # XXX XXX XXX get marked.
-          #
-          # XXX XXX XXX so we need a way to cut `to the right place' (read: back to just 
-          # XXX XXX XXX before the choice of the current rule)
-          #
-          # puts "marking!" if @trace > 1
-          # amb.mark
+          puts "marking!" if @trace > 1
+          amb.mark
 
           puts "choosing!" if @trace > 1
           rule = amb.choose(@p)
           puts "chose " + rule.to_s if @trace > 1
 
           amb.assert(e = Rulog::unify(a, rule.head))
-          resolvent.push ScopeMarker.instance
-          n_resolvent = e.rename(e.instantiate(rule.conditions + resolvent))
+          n_resolvent = e.rename(e.instantiate(rule.conditions +
+                                               [ ScopeMarker.instance ] +
+                                               resolvent))
           n_x = e.instantiate(x)
         end
+#       puts "resolvent: " + n_resolvent.inspect
         _solve amb, n_x, n_resolvent
       else
         x
