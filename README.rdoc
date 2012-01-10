@@ -1,0 +1,105 @@
+= rulog
+
+https://github.com/jimwise/ruby/tree/master/rulog
+
+Author::    Jim Wise  (mailto:jwise@draga.com)
+Copyright:: Copyright (c) 2011 Jim Wise
+License::   2-clause BSD-Style (see LICENSE.txt)
+
+== DESCRIPTION:
+
+Rulog is Ruby Logic, a Logic Programming system for Ruby.
+
+Rulog follows Prolog conventions where possible to do so within a Ruby DSL,
+but makes a strong effort to retain a Rubyish "feel" wherever possible.  The
+underlying functionality of Rulog, including the unification engine and
+solver are also exposed directly through a set of Ruby classes.
+
+While usable, this is a work in progress -- what's here now is a working
+Logic Programming environment for Ruby, with integration with Ruby language
+features (including unification of Prolog-style functors and Ruby scalar and
+Enumerable types), along with a DSL to make these easier to use.  This is
+sufficient for writing pure logic programs in Ruby, or for adding
+logic-programming-based capabilities to a Ruby program.
+
+
+Future releases will tighten the integration between this logic engine and
+the rest of Ruby, including adding:
+
+* the ability to escape to a Ruby block during unification, much as the "is"
+  operator in Prolog allows direct use of mathematical operations at
+  unification time
+
+* the ability to include a predicate written in Ruby in a Rulog rule,
+  similar to the use of FFI systems in modern prolog environments
+
+* further improvements to the DSL used with Rulog#declare, to simplify use of
+  these and other Rulog features
+
+
+The implementation of prolog's cut operator (!) is also not quite right at
+this point -- while cut should commit only to all choices back to the choice
+of the rule containing the cut, Rulog's cut! DSL operator currently commits
+to all choices made to this point in the decision tree.  This will be fixed
+in a future version (support for this is already present in ambit).
+
+
+== REQUIREMENTS:
+
+<b>Rulog depends on the ambit gem for backtracking.  Given this, Rulog will
+not work in JRuby or MacRuby (no callcc).  It should work in Ruby 1.9 with
+minor changes to ambit (callcc has moved to the 'continuation' stdlib).</b>
+
+
+== INSTALL:
+
+To install: 
+
+    $ gem install rulog
+
+
+== DEVELOPERS:
+
+After checking out the source, run:
+
+  $ rake newb
+
+This task will install any missing dependencies, run the tests/specs,
+and generate the RDoc.
+
+
+== SYNOPSIS:
+
+=== What is Logic Programming?
+
+
+
+
+== LICENSE:
+
+(The BSD 2-clause License)
+
+ Copyright (c) 2011 Jim Wise
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS
+ BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
