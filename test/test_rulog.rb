@@ -163,6 +163,7 @@ class TestRulog < Test::Unit::TestCase
                        Rulog::declare{  role(:joe, :parent)  },
                        Rulog::declare{  role(:bob, :employee)  })
     rs1.trace if ENV['RULOG_TRACE']
+
     assert rs1.solve_multi(Rulog::declare{  role(:joe, v(:role))  }).size == 2
     assert rs1.solve_multi(Rulog::declare{  role(:bob, v(:role))  }).size == 1
   end
@@ -292,8 +293,8 @@ class TestRulog < Test::Unit::TestCase
     # (without cuts, each red or black part could be used as its own color _or_ unknown
     # in a solution)
     #
-    #	part(a). part(b). part(c).
-    #	red(a). black(b).
+    #	red(a).
+    #   black(b).
     #	color(P,red) :- red(P),!.
     #	color(P,black) :- black(P),!.
     #	color(P,unknown). 
@@ -312,9 +313,24 @@ class TestRulog < Test::Unit::TestCase
     assert rs1.solve_multi(Rulog::declare{ color(:a, v(:col)) }).size == 1
     assert rs1.solve_multi(Rulog::declare{ color(:b, v(:col)) }).size == 1
 
-    assert rs1.solve(Rulog::declare{ color(:a, :red) }) #.size == 1
+    assert rs1.solve(Rulog::declare{ color(:a, :red) })
 
     # this should always return just 'unknown'
     assert rs1.solve_multi(Rulog::declare{ color(:c, v(:col)) }).size == 1
+  end
+
+  # a test that cut works _and_ doesn't cut too much
+  def test_cuts
+    rs1 = Rulog::rules( Rulog::declare { red(:a)   },
+                        Rulog::declare { color(v(:p), :red) [ red(v(:p)), cut! ]     },
+                        Rulog::declare { color(v(:p), :unknown) } ,
+                        Rulog::declare { finish(:a, :matte) },
+                        Rulog::declare { finish(:a, :smooth) },
+                        Rulog::declare { info(v(:x), v(:f), v(:c)) [
+                                                                    finish(v(:x), v(:f)),
+                                                                    color(v(:x), v(:c))
+                                                                   ] })
+    rs1.trace if ENV['RULOG_TRACE']
+    assert rs1.solve_multi(Rulog::declare{ info(:a, v(:fin), v(:col)) }).size == 2
   end
 end
