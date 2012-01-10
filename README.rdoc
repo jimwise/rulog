@@ -70,9 +70,23 @@ and generate the RDoc.
 
 == SYNOPSIS:
 
+(Coming soon)
+
 === What is Logic Programming?
 
+=== How to Use This Gem
 
+=== Querying for a Solution
+
+=== More Than One Answer
+
+=== Cutting
+
+==== Limitations of the current cut implementation
+
+=== Longer example
+
+=== References
 
 
 == LICENSE:
