@@ -278,8 +278,8 @@ class TestRulog < Test::Unit::TestCase
     assert rs1.solve(Rulog::declare{ hanoi(s(s(0)), :a, :b, :c, cons([:a, :to, :c], cons([:a, :to, :b], cons([:c, :to, :b], :nil))))   })
 
     # these currently diverge.  why?
-    #assert rs1.solve(Rulog::declare{ hanoi(s(s(0)), :a, :b, :c, v(:moves))   })
-    #assert rs1.solve(Rulog::declare{ hanoi(s(s(s(0))), :a, :b, :c, v(:moves))   })
+    assert rs1.solve(Rulog::declare{ hanoi(s(s(0)), :a, :b, :c, v(:moves))   })
+    assert rs1.solve(Rulog::declare{ hanoi(s(s(s(0))), :a, :b, :c, v(:moves))   })
   end
 
   def test_cut
