@@ -134,18 +134,14 @@ class TestRulog < Test::Unit::TestCase
   end
 
   def test_dsl
-    f1 =  Rulog::declare {
-      man(:abraham)
-    }
+    f1 =  Rulog::declare { man(:abraham) }
 
     assert f1.class == Rulog::Functor
     assert f1 == Rulog::Functor.new(:man, :abraham)
 
-    assert Rulog::declare {man(:abraham)} != Rulog::Functor.new(:woman, :eve)
-
     rs1 = Rulog::rules(
-      Rulog::declare{foo(v(:v1))} [Rulog::declare {bar(v(:v1))}],
-      f1 [ Rulog::declare{bar}]
+      Rulog::declare{ foo(v(:v1)) } [Rulog::declare {bar(v(:v1))}],
+      f1 [ Rulog::declare{bar} ]
     )
     assert(rs1.class == Rulog::RuleSet)
 
@@ -173,14 +169,14 @@ class TestRulog < Test::Unit::TestCase
 
   def test_classic_list
     rs1 = Rulog::rules(
-                       Rulog::declare{  list(:nil)                            },
-                       Rulog::declare{  list(cons(_, v(:xs))) [ list(v(:xs)) ]  },
+                       Rulog::declare{ list(:nil)                             },
+                       Rulog::declare{ list(cons(_, v(:xs))) [ list(v(:xs)) ] },
 
-                       Rulog::declare{  len(:nil, 0)                            },
-                       Rulog::declare{  len(cons(_, v(:v1)), s(v(:v2))) [ len(v(:v1), v(:v2)) ] },
+                       Rulog::declare{ len(:nil, 0)                           },
+                       Rulog::declare{ len(cons(_, v(:v1)), s(v(:v2))) [ len(v(:v1), v(:v2)) ] },
 
-                       Rulog::declare{  append(:nil, v(:xs), v(:xs))        },
-                       Rulog::declare{  append(cons(v(:x), v(:xs1)), v(:xs2), cons(v(:x), v(:xs3))) [
+                       Rulog::declare{ append(:nil, v(:xs), v(:xs))        },
+                       Rulog::declare{ append(cons(v(:x), v(:xs1)), v(:xs2), cons(v(:x), v(:xs3))) [
                                                append(v(:xs1), v(:xs2), v(:xs3))]  }
                                                                       
                        )
@@ -304,12 +300,11 @@ class TestRulog < Test::Unit::TestCase
     #
     # this is a 'red' cut (pun stated as intended in the source material)
 
-    rs1 = Rulog::rules(
-                       Rulog::declare { red(:a) },
-                       Rulog::declare { black(:b) },
-                       Rulog::declare { color(v(:p), :red) [ red(v(:p)), cut! ] },
-                       Rulog::declare { color(v(:p), :black) [ black(v(:p)), cut! ] },
-                       Rulog::declare { color(v(:p), :unknown) } )
+    rs1 = Rulog::rules( Rulog::declare { red(:a)   },
+                        Rulog::declare { black(:b) },
+                        Rulog::declare { color(v(:p), :red) [ red(v(:p)), cut! ]     },
+                        Rulog::declare { color(v(:p), :black) [ black(v(:p)), cut! ] },
+                        Rulog::declare { color(v(:p), :unknown) } )
 
     rs1.trace if ENV['RULOG_TRACE']
 
