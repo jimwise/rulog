@@ -223,59 +223,62 @@ class TestRulog < Test::Unit::TestCase
                        )
     rs1.trace if ENV['RULOG_TRACE']
 
-    assert rs1.solve(Rulog::declare{    num(0)    })
-    assert rs1.solve(Rulog::declare{    num(s(s(s(0))))    })
-    assert !rs1.solve(Rulog::declare{   num(s(s(s(1))))    })
+    assert rs1.solve(Rulog::declare{  num(0)    })
+    assert rs1.solve(Rulog::declare{  num(s(s(s(0))))    })
+    assert !rs1.solve(Rulog::declare{ num(s(s(s(1))))    })
 
-    assert rs1.solve(Rulog::declare{    equal(0, 0)    })
-    assert rs1.solve(Rulog::declare{    equal(s(s(s(0))), s(s(s(0))))    })
-    assert !rs1.solve(Rulog::declare{   equal(s(s(s(0))), s(s(0)))    })
+    assert rs1.solve(Rulog::declare{  equal(0, 0)    })
+    assert rs1.solve(Rulog::declare{  equal(s(s(s(0))), s(s(s(0))))    })
+    assert !rs1.solve(Rulog::declare{ equal(s(s(s(0))), s(s(0)))    })
 
-    assert rs1.solve(Rulog::declare{    plus(0, 0, 0)    })
-    assert rs1.solve(Rulog::declare{    plus(s(s(0)), 0, s(s(0)))    })
-    assert rs1.solve(Rulog::declare{    plus(s(s(0)), s(s(0)), s(s(s(s(0)))))    })
-    assert !rs1.solve(Rulog::declare{   plus(s(s(0)), s(0), s(s(s(s(0)))))    })
+    assert rs1.solve(Rulog::declare{  plus(0, 0, 0)    })
+    assert rs1.solve(Rulog::declare{  plus(s(s(0)), 0, s(s(0)))    })
+    assert rs1.solve(Rulog::declare{  plus(s(s(0)), s(s(0)), s(s(s(s(0)))))    })
+    assert !rs1.solve(Rulog::declare{ plus(s(s(0)), s(0), s(s(s(s(0)))))    })
 
-    assert rs1.solve(Rulog::declare{    plus(0, v(:x), 0)    })
-    assert rs1.solve(Rulog::declare{    plus(v(:x), 0, 0)    })
-    assert rs1.solve(Rulog::declare{    plus(0, 0, v(:x))    })
+    assert rs1.solve(Rulog::declare{  plus(0, v(:x), 0)    })
+    assert rs1.solve(Rulog::declare{  plus(v(:x), 0, 0)    })
+    assert rs1.solve(Rulog::declare{  plus(0, 0, v(:x))    })
 
-    assert rs1.solve(Rulog::declare{    plus(s(s(0)), v(:x), s(s(0)))    })
-    assert rs1.solve(Rulog::declare{    plus(s(s(0)), v(:x), s(s(s(0))))    })
+    assert rs1.solve(Rulog::declare{  plus(s(s(0)), v(:x), s(s(0)))    })
+    assert rs1.solve(Rulog::declare{  plus(s(s(0)), v(:x), s(s(s(0))))    })
 
-    assert rs1.solve(Rulog::declare{    plus(s(s(0)), v(:x), s(s(0)))    })
-    assert rs1.solve(Rulog::declare{    plus(v(:x), s(s(0)), s(s(s(0))))    })
-    assert rs1.solve(Rulog::declare{    plus(v(:x), s(s(0)), s(s(0)))    })
+    assert rs1.solve(Rulog::declare{  plus(s(s(0)), v(:x), s(s(0)))    })
+    assert rs1.solve(Rulog::declare{  plus(v(:x), s(s(0)), s(s(s(0))))    })
+    assert rs1.solve(Rulog::declare{  plus(v(:x), s(s(0)), s(s(0)))    })
 
-    assert rs1.solve(Rulog::declare{    plus(s(s(0)), v(:x), s(s(s(s(0)))))    })
-    assert rs1.solve(Rulog::declare{    plus(v(:x), s(s(0)), s(s(s(s(0)))))    })
-    assert rs1.solve(Rulog::declare{    plus(v(:x), v(:y), s(s(s(s(0)))))    })
+    assert rs1.solve(Rulog::declare{  plus(s(s(0)), v(:x), s(s(s(s(0)))))    })
+    assert rs1.solve(Rulog::declare{  plus(v(:x), s(s(0)), s(s(s(s(0)))))    })
+    assert rs1.solve(Rulog::declare{  plus(v(:x), v(:y), s(s(s(s(0)))))    })
   end
 
   def test_hanoi
     # this cries out for a better enumerable unifier
     rs1 = Rulog::rules(
-                       Rulog::declare{  append(:nil, v(:xs), v(:xs))      },
-                       Rulog::declare{  append(cons(v(:x), v(:xs)), v(:ys), cons(v(:x), v(:zs))) [
+                       Rulog::declare{ append(:nil, v(:xs), v(:xs))      },
+                       Rulog::declare{ append(cons(v(:x), v(:xs)), v(:ys), cons(v(:x), v(:zs))) [
                                                append(v(:xs), v(:ys), v(:zs))]  },
 
                        # returns steps to move stack on v1 to v2, using v3 as aux
-                       Rulog::declare{  hanoi(s(0), v(:a), v(:b), v(:c), cons([v(:a), :to, v(:b)], :nil))  },
-                       Rulog::declare{  hanoi(s(v(:n)), v(:a), v(:b), v(:c), v(:moves)) [
-                                             hanoi(v(:n), v(:a), v(:b), v(:c), v(:ms1)),
+                       Rulog::declare{ hanoi(s(0), v(:a), v(:b), v(:c), cons([v(:a), :to, v(:b)], :nil))  },
+                       Rulog::declare{ hanoi(s(v(:n)), v(:a), v(:b), v(:c), v(:moves)) [
+                                             hanoi(v(:n), v(:a), v(:c), v(:b), v(:ms1)),
                                              hanoi(v(:n), v(:c), v(:b), v(:a), v(:ms2)),
-                                             append(v(:ms1), cons([v(:a), :to, v(:b)], v(:ms2)), v(:moves))
-                                                                         ]  }
+                                             append(v(:ms1), cons([v(:a), :to, v(:b)], v(:ms2)), v(:moves)) ]  }
                        )
 
     rs1.trace if ENV['RULOG_TRACE']
 
-    assert rs1.solve(Rulog::declare{  append(cons(1, cons(2, cons(3, :nil))),
+    assert rs1.solve(Rulog::declare{ append(cons(1, cons(2, cons(3, :nil))),
                                              cons(4, cons(5, cons(6, :nil))), v(:xs))   })
     
     # test a 3-disk stack
-    assert rs1.solve(Rulog::declare{    hanoi(s(0), :a, :b, :c, v(:moves))   })
-    #assert rs1.solve(Rulog::declare{    hanoi(s(s(0)), :a, :b, :c, v(:moves))   })
-    #assert rs1.solve(Rulog::declare{    hanoi(s(s(s(0))), :a, :b, :c, vmoves)   })
+    assert rs1.solve(Rulog::declare{ hanoi(s(0), :a, :b, :c, v(:moves))   })
+    assert rs1.solve(Rulog::declare{ hanoi(s(0), :a, :b, :c, cons([:a, :to, :b], :nil))   })
+    assert rs1.solve(Rulog::declare{ hanoi(s(s(0)), :a, :b, :c, cons([:a, :to, :c], cons([:a, :to, :b], cons([:c, :to, :b], :nil))))   })
+
+    # these currently diverge.  why?
+    #assert rs1.solve(Rulog::declare{ hanoi(s(s(0)), :a, :b, :c, v(:moves))   })
+    #assert rs1.solve(Rulog::declare{ hanoi(s(s(s(0))), :a, :b, :c, v(:moves))   })
   end
 end

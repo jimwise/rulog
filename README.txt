@@ -1,28 +1,51 @@
 = rulog
 
-* FIX (url)
+https://github.com/jimwise/ruby/tree/master/rulog
+
+Author::    Jim Wise  (mailto:jwise@draga.com)
+Copyright:: Copyright (c) 2011 Jim Wise
+License::   2-clause BSD-Style (see LICENSE.txt)
 
 == DESCRIPTION:
 
-This is a work in progress -- what's here now is a working, but somewhat
-difficult to use Logic programming environment for Ruby -- but DSL support
-is growing by leaps and bounds.
+Rulog is Ruby Logic, a Logic Programming system for Ruby.
 
-== FEATURES/PROBLEMS:
+Rulog follows Prolog conventions where possible to do so within a Ruby DSL,
+but makes a strong effort to retain a Rubyish "feel" wherever possible.  The
+underlying functionality of Rulog, including the unification engine and
+solver are also exposed directly through a set of Ruby classes.
 
-* FIX (list of features or problems)
+While usable, this is a work in progress -- what's here now is a working
+Logic Programming environment for Ruby, with integration with Ruby language
+features (including unification of Prolog-style functors and Ruby scalar and
+Enumerable types), along with a DSL to make these easier to use.  This is
+sufficient for writing pure logic programs in Ruby, or for adding
+logic-programming-based capabilities to a Ruby program.
 
-== SYNOPSIS:
+Future releases will tighten the integration between this logic engine and
+the rest of Ruby, including adding:
 
-  FIX (code sample of usage)
+* the ability to escape to a Ruby block during unification, much as the "is"
+  operator in Prolog allows direct use of mathematical operations at
+  unification time
+
+* the ability to include a predicate written in Ruby in a Rulog rule,
+  similar to the use of FFI systems in modern prolog environments
+
+* further improvements to the DSL used with Rulog#declare, to simplify use of
+  these and other Rulog features
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+<b>Rulog depends on the ambit gem for backtracking.  Given this, Rulog will
+not work in JRuby or MacRuby (no callcc).  It should work in Ruby 1.9 with
+minor changes to ambit (callcc has moved to the 'continuation' stdlib).</b>
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+To install: 
+
+    $ gem install rulog
 
 == DEVELOPERS:
 
@@ -32,6 +55,13 @@ After checking out the source, run:
 
 This task will install any missing dependencies, run the tests/specs,
 and generate the RDoc.
+
+== SYNOPSIS:
+
+=== What is Logic Programming
+
+
+
 
 == LICENSE:
 
