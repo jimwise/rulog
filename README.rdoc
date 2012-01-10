@@ -66,9 +66,10 @@ and generate the RDoc.
 
 == SYNOPSIS:
 
-(Coming soon)
-
 === What is Logic Programming?
+
+Logic programming is a form of programming which consists of stating a
+series of <em>rules</em> which describe 
 
 === How to Use This Gem
 
@@ -112,6 +113,7 @@ which allow use of Logic Programming with Ruby.
 
 === References
 
+[1] Sterling, Leon and Ehud Shapiro, <em>The Art of Prolog</em>, MIT Press, 1994
 
 == LICENSE:
 
