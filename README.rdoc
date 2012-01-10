@@ -36,13 +36,11 @@ the rest of Ruby, including adding:
 * further improvements to the DSL used with Rulog::declare, to simplify use of
   these and other Rulog features
 
-
 The implementation of prolog's cut operator (!) is also not quite right at
 this point -- while cut should commit only to all choices back to the choice
 of the rule containing the cut, Rulog's cut! DSL operator currently commits
 to all choices made to this point in the decision tree.  This will be fixed
 in a future version (support for this is already present in ambit).
-
 
 == REQUIREMENTS:
 
@@ -50,13 +48,11 @@ in a future version (support for this is already present in ambit).
 not work in JRuby or MacRuby (no callcc).  It should work in Ruby 1.9 with
 minor changes to ambit (callcc has moved to the 'continuation' stdlib).</b>
 
-
 == INSTALL:
 
 To install: 
 
     $ gem install rulog
-
 
 == DEVELOPERS:
 
