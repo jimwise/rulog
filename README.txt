@@ -4,7 +4,9 @@
 
 == DESCRIPTION:
 
-FIX (describe your package)
+This is a work in progress -- what's here now is a working, but somewhat
+difficult to use Logic programming environment for Ruby -- but DSL support
+is growing by leaps and bounds.
 
 == FEATURES/PROBLEMS:
 
