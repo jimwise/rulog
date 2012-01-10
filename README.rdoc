@@ -33,7 +33,7 @@ the rest of Ruby, including adding:
 * the ability to include a predicate written in Ruby in a Rulog rule,
   similar to the use of FFI systems in modern prolog environments
 
-* further improvements to the DSL used with Rulog#declare, to simplify use of
+* further improvements to the DSL used with Rulog::declare, to simplify use of
   these and other Rulog features
 
 
