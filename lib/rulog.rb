@@ -143,6 +143,14 @@ module Rulog
     end
   end
 
+  class ScopeMarker
+    include Singleton
+    
+    def to_s
+      "(scope marker)"
+    end
+  end
+
   class Wildcard < Var
     include Singleton
 
@@ -295,6 +303,11 @@ module Rulog
           amb.cut!
           n_resolvent = resolvent
           n_x = x
+        when ScopeMarker
+          puts "finished rule" if @trace > 1
+          # amb.unmark!
+          n_resolvent = resolvent
+          n_x = x
         else
           # XXX XXX XXX cut should commit to the current choice of rule, not further.
           # XXX XXX XXX with this amb.mark commented out, cut! commits to all current
@@ -317,6 +330,7 @@ module Rulog
           puts "chose " + rule.to_s if @trace > 1
 
           amb.assert(e = Rulog::unify(a, rule.head))
+          resolvent.push ScopeMarker.instance
           n_resolvent = e.rename(e.instantiate(rule.conditions + resolvent))
           n_x = e.instantiate(x)
         end
