@@ -48,6 +48,10 @@ in a future version (support for this is already present in ambit).
 not work in JRuby or MacRuby (no callcc).  It should work in Ruby 1.9 with
 minor changes to ambit (callcc has moved to the 'continuation' stdlib).</b>
 
+<b>Rulog currently depends on a pre-release version of the unific gem, which
+adds a hack to modify unification of Functors.  This will be addressed more
+cleanly before Rulog is released.</b>
+
 == INSTALL:
 
 To install: 
