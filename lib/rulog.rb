@@ -1,5 +1,8 @@
+require 'rubygems'
+
 require 'singleton'
 require 'ambit'
+gem 'unific', '>=0.10'
 require 'unific'
 
 module Rulog
