@@ -214,7 +214,7 @@ module Rulog
     def method_missing sym, *args
       Rulog::Functor.new sym, *args
     end
-   end
+  end
 
   def self.rules *rules
     Rulog::RuleSet.new(*rules)
