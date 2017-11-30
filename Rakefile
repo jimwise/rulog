@@ -12,7 +12,8 @@ Hoe.plugin :flay
 Hoe.plugin :flog
 
 Hoe.spec 'rulog' do
-  developer('jwise', 'jwise@draga.com')
+  developer 'Jim Wise', 'jwise@draga.com'
+  license 'BSD-2-Clause'
 end
 
 # vim: syntax=ruby
